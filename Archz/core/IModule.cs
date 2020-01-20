@@ -5,7 +5,7 @@ using System.Text;
 namespace Archz.core
 {
 
-    public interface Module
+    public interface IModule
     {
         void Init();
         void Start();

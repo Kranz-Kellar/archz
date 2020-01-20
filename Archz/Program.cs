@@ -6,7 +6,8 @@ namespace Archz
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            core.Archz archz = new core.Archz();
+            archz.Run();
         }
     }
 }
