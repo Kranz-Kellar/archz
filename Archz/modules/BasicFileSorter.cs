@@ -18,22 +18,22 @@ namespace Archz.modules
 
         public void Init()
         {
-            Console.WriteLine("BasicFileSorter init");
+            core.Logger.Log(core.LogStatus.INFO, "BasicFileSorter Init");
         }
 
         public void Start()
         {
-            Console.WriteLine("BasicFileSorter Start");
+            core.Logger.Log(core.LogStatus.INFO, "BasicFileSorter Start");
         }
 
         public void Terminate()
         {
-            Console.WriteLine("BasicFileSorter Terminate");
+            core.Logger.Log(core.LogStatus.INFO, "BasicFileSorter Terminate");
         }
 
         public void Update()
         {
-            Console.WriteLine("BasicFileSorter Update");
+            core.Logger.Log(core.LogStatus.INFO, "BasicFileSorter Update");
         }
     }
 }

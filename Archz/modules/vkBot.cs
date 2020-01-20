@@ -18,22 +18,22 @@ namespace Archz.modules
 
         public void Init()
         {
-            Console.WriteLine("vkBot init");
+            core.Logger.Log(core.LogStatus.INFO, "vskBot Init");
         }
 
         public void Start()
         {
-            Console.WriteLine("vkBot Start");
+            core.Logger.Log(core.LogStatus.INFO, "vskBot Start");
         }
 
         public void Terminate()
         {
-            Console.WriteLine("vkBot Terminate");
+            core.Logger.Log(core.LogStatus.INFO, "vskBot Terminate");
         }
 
         public void Update()
         {
-            Console.WriteLine("vkBot Update");
+            core.Logger.Log(core.LogStatus.INFO, "vskBot Update");
         }
     }
 }
