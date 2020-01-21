@@ -8,6 +8,10 @@ namespace Archz
         {
             core.Archz archz = new core.Archz();
             archz.Run();
+
+#if DEBUG
+            Console.ReadLine();
+#endif
         }
     }
 }

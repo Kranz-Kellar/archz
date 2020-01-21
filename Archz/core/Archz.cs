@@ -21,6 +21,7 @@ namespace Archz.core
 
         private void Init()
         {
+            Logger.Log(LogStatus.INFO, $"SESSION STARTED =============================================");
             modulesList = ModuleReflector.GetAllModules();
             modulesList.ForEach(x => x.Init());
         }
@@ -38,6 +39,7 @@ namespace Archz.core
         private void Terminate()
         {
             modulesList.ForEach(x => x.Terminate());
+            Logger.Log(LogStatus.INFO, $"SESSION TERMINATED ==========================================");
         }
     }
 }
