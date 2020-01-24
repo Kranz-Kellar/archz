@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Archz.modules
 {
-    class BasicFileSorter : core.IModule
+    public class BasicFileSorter : core.IModule
     {
         Dictionary<string, string> typesOfExtensions;
         Dictionary<string, string> targetFolders;
@@ -14,7 +14,6 @@ namespace Archz.modules
 
         public void Init()
         {
-
             //Getting folders to sort 
             typesOfExtensions = new Dictionary<string, string>();
             targetFolders = new Dictionary<string, string>();

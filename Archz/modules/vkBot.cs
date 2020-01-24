@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Archz.modules
 {
-    class vkBot : core.IModule
+    public class vkBot : core.IModule
     {
         public void Disable()
         {

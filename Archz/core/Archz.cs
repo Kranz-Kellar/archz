@@ -1,5 +1,4 @@
-﻿using SimpleInjector;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +8,6 @@ namespace Archz.core
     public class Archz
     {
         private List<IModule> modulesList;
-        private Container container;
 
         public void Run()
         {
