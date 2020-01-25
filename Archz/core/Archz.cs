@@ -20,6 +20,7 @@ namespace Archz.core
         private void Init()
         {
             Logger.Log(LogStatus.INFO, $"SESSION STARTED =============================================");
+            SettingsManager.Init();
             modulesList = ModuleReflector.GetAllModules();
             modulesList.ForEach(x => x.Init());
         }

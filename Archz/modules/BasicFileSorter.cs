@@ -7,18 +7,12 @@ namespace Archz.modules
 {
     public class BasicFileSorter : core.IModule
     {
-        Dictionary<string, string> typesOfExtensions;
-        Dictionary<string, string> targetFolders;
-        List<string> foldersForSorting;
-
+        BasicFileSorterSettings settings;
 
         public void Init()
         {
-            //Getting folders to sort 
-            typesOfExtensions = new Dictionary<string, string>();
-            targetFolders = new Dictionary<string, string>();
-            foldersForSorting = new List<string>();
-            AddTestFolders();
+            settings = core.SettingsManager.LoadSettingsForBasicFileSorter();
+            CheckAndCreateCategoryFolders();
         }
 
         public void Start()
@@ -34,7 +28,6 @@ namespace Archz.modules
         public void Update()
         {
             ScanFolders();
-            
         }
 
         public void Disable()
@@ -47,24 +40,22 @@ namespace Archz.modules
             throw new NotImplementedException();
         }
 
-        private void AddTestFolders()
-        {
-            typesOfExtensions[".docx"] = "text";
-            typesOfExtensions[".png"] = "image";
-            typesOfExtensions[".jpg"] = "image";
-
-            targetFolders["image"] = "images";
-            targetFolders["music"] = "music";
-            targetFolders["text"] = "text";
-            targetFolders["general"] = "general";
-
-            foldersForSorting.Add("C:\\Users\\Дмитрий\\Desktop\\testForSortingBot");
-        }
 
         #region Private Methods
+
+        private void CheckAndCreateCategoryFolders()
+        {
+            foreach(var folder in settings.CategoryFolders)
+            {
+                if (!Directory.Exists(folder.Value))
+                {
+                    Directory.CreateDirectory(folder.Value);
+                }
+            }
+        }
         private void ScanFolders()
         {
-            foreach (var path in foldersForSorting)
+            foreach (var path in settings.ObservedFolders)
             {
                 //Scan every file and classify
                 //Classification includes images, soundes, archives, executable files, folders and others
@@ -87,14 +78,14 @@ namespace Archz.modules
         {
             try
             {
-                string fileExtension = Path.GetExtension(pathToFile);
-                string typeOfFile = typesOfExtensions[fileExtension];
+                string fileExtension = Path.GetExtension(pathToFile).ToLower();
+                string typeOfFile = settings.ExtensionsDefinition[fileExtension];
 
-                MoveFileToTypedFolder(pathToFile, targetFolders[typeOfFile]);
+                MoveFileToTypedFolder(pathToFile, settings.CategoryFolders[typeOfFile]);
             }
-            catch(KeyNotFoundException)
+            catch(KeyNotFoundException e)
             {
-                MoveFileToGeneralFolder(pathToFile);
+                core.Logger.Log(core.LogStatus.ERROR, $"Extension {Path.GetExtension(pathToFile).ToLower()} is not found");
             }
         }
 
@@ -108,18 +99,6 @@ namespace Archz.modules
             File.Move(pathToFile, destinationPath);
 
             core.Logger.Log(core.LogStatus.INFO, $"File {Path.GetFileName(pathToFile)} has been moved to {typedFolderPath}");
-        }
-
-        private void MoveFileToGeneralFolder(string pathToFile)
-        {
-            if (!Directory.Exists(targetFolders["general"]))
-            {
-                Directory.CreateDirectory(targetFolders["general"]);
-            }
-            string destinationPath = $"{targetFolders["general"]}\\{Path.GetFileName(pathToFile)}";
-            File.Move(pathToFile, destinationPath);
-
-            core.Logger.Log(core.LogStatus.INFO, $"File {Path.GetFileName(pathToFile)} has been moved to {destinationPath}");
         }
 
         #endregion

@@ -1,36 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Xml;
+using Archz.modules;
 
 namespace Archz.core
 {
-    public sealed class SettingsManager
+    public class SettingsManager
     {
-        static private string nameOfConfigFile = "config.eqs";
-        static public void LoadSettings()
+        static private string configFileName = "config.xml";
+        static private XmlDocument configFile;
+        static public void Init()
         {
+            if(!File.Exists(configFileName))
+            {
+                throw new FileNotFoundException("Configuration file not found");
+            }
 
+            configFile = new XmlDocument();
+            configFile.Load(configFileName);
         }
 
-        /// <summary>
-        /// Returns value of attribute
-        /// </summary>
-        /// <param name="nameOfKey"></param>
-        /// <returns></returns>
-        static public string GetAttribute(string nameOfKey)
+        static public BasicFileSorterSettings LoadSettingsForBasicFileSorter()
         {
-            return new string("No_Imp");
-        }
+            BasicFileSorterSettings settings = new BasicFileSorterSettings();
+            XmlNodeList basicFileSorterNodesList = configFile.DocumentElement.SelectNodes("BasicFileSorter");
+            foreach(XmlNode nodeList in basicFileSorterNodesList)
+            {
+                var observedFolders = nodeList.SelectSingleNode("ObservedFolders");
+                foreach(XmlNode folder in observedFolders.ChildNodes)
+                {
+                    settings.ObservedFolders.Add(folder.InnerText);
+                }
 
-        /// <summary>
-        /// Returns list of values of node
-        /// </summary>
-        /// <param name="nameOfNode"></param>
-        /// <returns></returns>
-        static public string GetNode(string nameOfNode)
-        {
-            return new string("No_Imp");
-        }
+                var extenstionsDef = nodeList.SelectSingleNode("ExtensionsDefinition");
+                foreach(XmlNode item in extenstionsDef.ChildNodes)
+                {
+                    settings.ExtensionsDefinition[item.InnerText] = item.Attributes["category"].Value;
+                }
+
+                var categoryFolders = nodeList.SelectSingleNode("CategoryFolders");
+                foreach(XmlNode folder in categoryFolders.ChildNodes)
+                {
+                    settings.CategoryFolders[folder.Attributes["category"].Value] = folder.InnerText;
+                }
+        
+            }
+
+            return settings;
+        } 
+
+        
     }
 }
