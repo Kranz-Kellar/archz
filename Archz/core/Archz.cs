@@ -7,7 +7,7 @@ namespace Archz.core
 {
     public class Archz
     {
-        private List<IModule> modulesList;
+        private List<Module> modulesList;
 
         public void Run()
         {

@@ -4,34 +4,25 @@ using System.Text;
 
 namespace Archz.modules
 {
-    public class vkBot : core.IModule
+    public class vkBot : core.Module
     {
-        public void Disable()
-        {
-            throw new NotImplementedException();
-        }
 
-        public void Enable()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Init()
+        public override void Init()
         {
             core.Logger.Log(core.LogStatus.INFO, "vskBot Init");
         }
 
-        public void Start()
+        public override void Start()
         {
             core.Logger.Log(core.LogStatus.INFO, "vskBot Start");
         }
 
-        public void Terminate()
+        public override void Terminate()
         {
             core.Logger.Log(core.LogStatus.INFO, "vskBot Terminate");
         }
 
-        public void Update()
+        public override void Update()
         {
             core.Logger.Log(core.LogStatus.INFO, "vskBot Update");
         }

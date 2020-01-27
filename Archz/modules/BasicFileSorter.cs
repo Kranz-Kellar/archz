@@ -5,39 +5,29 @@ using System.Text;
 
 namespace Archz.modules
 {
-    public class BasicFileSorter : core.IModule
+    public class BasicFileSorter : core.Module
     {
         BasicFileSorterSettings settings;
 
-        public void Init()
+        public override void Init()
         {
             settings = core.SettingsManager.LoadSettingsForBasicFileSorter();
             CheckAndCreateCategoryFolders();
+            Enable();
         }
 
-        public void Start()
+        public override void Start()
         {
             
         }
 
-        public void Terminate()
+        public override void Terminate()
         {
-            
         }
 
-        public void Update()
+        public override void Update()
         {
             ScanFolders();
-        }
-
-        public void Disable()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Enable()
-        {
-            throw new NotImplementedException();
         }
 
 
