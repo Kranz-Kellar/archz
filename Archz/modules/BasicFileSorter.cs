@@ -9,9 +9,24 @@ namespace Archz.modules
     {
         BasicFileSorterSettings settings;
 
+        public enum FileCategory
+        {
+            executable,
+            image,
+            compressed,
+            font,
+            video,
+            text,
+            torrent
+        }
+
+        #region Module methods
+
         public void Init()
         {
             settings = core.SettingsManager.LoadSettingsForBasicFileSorter();
+            core.CommandExecuter.AddCommand("fs_add_observer_folder", AddObserverFolder);
+            core.CommandExecuter.AddCommand("fs_add_extension_definition", AddExtensionDefinition);
             CheckAndCreateCategoryFolders();
         }
 
@@ -32,14 +47,35 @@ namespace Archz.modules
 
         public void Disable()
         {
-            throw new NotImplementedException();
+            
         }
 
         public void Enable()
         {
-            throw new NotImplementedException();
+            
         }
 
+        public void Restart()
+        {
+            settings = core.SettingsManager.LoadSettingsForBasicFileSorter();
+        }
+
+        #endregion
+
+        #region Public Methods
+        public void AddObserverFolder(object path)
+        {
+            core.SettingsManager.AddNodeWithInnerText("/Settings/BasicFileSorter/ObservedFolders",
+                "folder", path.ToString());
+        }
+
+        public void AddExtensionDefinition(object ext, object category)
+        {
+            core.SettingsManager.AddNodeWithAttributeAndInnerText("/Settings/BasicFileSorter/ExtensionsDefinition",
+                "ext", ext.ToString(), "category", ((FileCategory)category).ToString());
+        }
+
+        #endregion
 
         #region Private Methods
 
@@ -83,7 +119,7 @@ namespace Archz.modules
 
                 MoveFileToTypedFolder(pathToFile, settings.CategoryFolders[typeOfFile]);
             }
-            catch(KeyNotFoundException e)
+            catch(KeyNotFoundException)
             {
                 core.Logger.Log(core.LogStatus.ERROR, $"Extension {Path.GetExtension(pathToFile).ToLower()} is not found");
             }

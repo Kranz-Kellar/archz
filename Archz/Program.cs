@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Archz
 {
@@ -12,6 +13,11 @@ namespace Archz
 #if DEBUG
             Console.ReadLine();
 #endif
+        }
+
+        static void foo()
+        {
+            Console.WriteLine("Zero parameters methods was called");
         }
     }
 }

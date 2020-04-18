@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Archz.modules
 {
-    public class vkBot : core.IModule
+    public class vkBot 
     {
         public void Disable()
         {
@@ -34,6 +34,11 @@ namespace Archz.modules
         public void Update()
         {
             core.Logger.Log(core.LogStatus.INFO, "vskBot Update");
+        }
+
+        public void Restart()
+        {
+
         }
     }
 }

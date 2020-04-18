@@ -13,5 +13,6 @@ namespace Archz.core
         void Disable();
         void Enable();
         void Terminate();
+        void Restart();
     }
 }

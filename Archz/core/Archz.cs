@@ -21,6 +21,7 @@ namespace Archz.core
         {
             Logger.Log(LogStatus.INFO, $"SESSION STARTED =============================================");
             SettingsManager.Init();
+            CommandExecuter.Init();
             modulesList = ModuleReflector.GetAllModules();
             modulesList.ForEach(x => x.Init());
         }
@@ -32,7 +33,10 @@ namespace Archz.core
 
         private void Update()
         {
-            modulesList.ForEach(x => x.Update());
+            lock (modulesList)
+            {
+                modulesList.ForEach(x => x.Update());
+            }
         }
 
         private void Terminate()

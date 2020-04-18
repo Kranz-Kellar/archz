@@ -51,6 +51,28 @@ namespace Archz.core
             return settings;
         } 
 
+        static public void AddNodeWithInnerText(string parent, string newNodeName, string innerTextOfNode)
+        {
+            var parentNode = configFile.DocumentElement.SelectSingleNode(parent);
+            var newNode = configFile.CreateElement(newNodeName);
+            newNode.InnerText = innerTextOfNode;
+            parentNode.AppendChild(newNode);
+            configFile.Save(configFileName);
+        }
+
+        static public void AddNodeWithAttributeAndInnerText(string parent, string newNodeName,
+            string innerTextOfNode, string attributeName, string attributeText)
+        {
+            var parentNode = configFile.DocumentElement.SelectSingleNode(parent);
+            var newNode = configFile.CreateElement(newNodeName);
+            newNode.InnerText = innerTextOfNode;
+            var attribute = configFile.CreateAttribute(attributeName);
+            attribute.Value = attributeText;
+            newNode.Attributes.Append(attribute);
+            parentNode.AppendChild(newNode);
+            configFile.Save(configFileName);
+        }
+
         
     }
 }
