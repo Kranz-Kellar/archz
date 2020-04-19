@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Timers;
 
 namespace Archz.modules
 {
     public class BasicFileSorter : core.IModule
     {
         BasicFileSorterSettings settings;
+        Timer timer;
 
         public enum FileCategory
         {
@@ -27,32 +29,49 @@ namespace Archz.modules
             settings = core.SettingsManager.LoadSettingsForBasicFileSorter();
             core.CommandExecuter.AddCommand("fs_add_observer_folder", AddObserverFolder);
             core.CommandExecuter.AddCommand("fs_add_extension_definition", AddExtensionDefinition);
+            core.CommandExecuter.AddCommand("fs_enable", Enable);
+            core.CommandExecuter.AddCommand("fs_disable", Disable);
+            core.CommandExecuter.AddCommand("fs_set_scan_freq", SetScanFrequency);
+
             CheckAndCreateCategoryFolders();
+
+            timer = new Timer(settings.GetScanFrequencyInMillisec());
+            timer.Elapsed += Timer_Elapsed;
         }
 
-        public void Start()
-        {
-            
-        }
-
-        public void Terminate()
-        {
-            
-        }
-
-        public void Update()
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             ScanFolders();
         }
 
+        public void Start()
+        {
+            timer.Start();
+        }
+
+        public void Update()
+        {
+        }
+
         public void Disable()
         {
-            
+            if(timer.Enabled)
+            {
+                timer.Stop();
+            }
         }
 
         public void Enable()
         {
-            
+            if(!timer.Enabled)
+            {
+                timer.Start();
+            }
+        }
+
+        public void Terminate()
+        {
+
         }
 
         public void Restart()
@@ -69,10 +88,28 @@ namespace Archz.modules
                 "folder", path.ToString());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ext"></param>
+        /// <param name="category">Must be in FileCategory enum values</param>
         public void AddExtensionDefinition(object ext, object category)
         {
-            core.SettingsManager.AddNodeWithAttributeAndInnerText("/Settings/BasicFileSorter/ExtensionsDefinition",
-                "ext", ext.ToString(), "category", ((FileCategory)category).ToString());
+            try
+            {
+                var parsedCategory = (FileCategory)Enum.Parse(typeof(FileCategory), category.ToString(), true);
+                core.SettingsManager.AddNodeWithAttributeAndInnerText("/Settings/BasicFileSorter/ExtensionsDefinition",
+                    "ext", ext.ToString(), "category", parsedCategory.ToString());
+            }
+            catch(ArgumentException)
+            {
+                core.Logger.Log(core.LogStatus.ERROR, $"File category '{category.ToString()}' doesn't exist");
+            }
+        }
+
+        public void SetScanFrequency(object newScanFreq)
+        {
+
         }
 
         #endregion

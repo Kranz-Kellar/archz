@@ -35,9 +35,9 @@ namespace Archz.core
                         break;
                 }
             }
-            catch(Exception)
+            catch(KeyNotFoundException)
             {
-
+                Logger.Log(LogStatus.ERROR, $"Command {cmd.cmd} not found");
             }
         }
 

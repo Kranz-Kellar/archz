@@ -14,11 +14,23 @@ namespace Archz.modules
         public Dictionary<string, string> ExtensionsDefinition { get; set; }
         public Dictionary<string, string> CategoryFolders { get; set; }
 
+        public int ScanFrequencyInMin { get; set; }
+
+        private int DefaultScanFrequencyInMin = 5;
+
+        public int GetScanFrequencyInMillisec()
+        {
+            return ScanFrequencyInMin * 60 * 1000;
+        }
+
+        
+
         public BasicFileSorterSettings()
         {
             ObservedFolders = new List<string>();
             ExtensionsDefinition = new Dictionary<string, string>();
             CategoryFolders = new Dictionary<string, string>();
+            ScanFrequencyInMin = DefaultScanFrequencyInMin;
         }
     }
 }
