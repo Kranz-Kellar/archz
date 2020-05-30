@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Archz.core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -84,8 +85,15 @@ namespace Archz.modules
         #region Public Methods
         public void AddObserverFolder(object path)
         {
-            core.SettingsManager.AddNodeWithInnerText("/Settings/BasicFileSorter/ObservedFolders",
-                "folder", path.ToString());
+            try
+            {
+                core.SettingsManager.AddNodeWithInnerText("/Settings/BasicFileSorter/ObservedFolders",
+                    "folder", path.ToString());
+            }
+            catch(Exception)
+            {
+                core.Logger.Log(LogStatus.ERROR, $"Something wrong adding new observer folder");
+            }
         }
 
         /// <summary>
@@ -101,7 +109,7 @@ namespace Archz.modules
                 core.SettingsManager.AddNodeWithAttributeAndInnerText("/Settings/BasicFileSorter/ExtensionsDefinition",
                     "ext", ext.ToString(), "category", parsedCategory.ToString());
             }
-            catch(ArgumentException)
+            catch(Exception)
             {
                 core.Logger.Log(core.LogStatus.ERROR, $"File category '{category.ToString()}' doesn't exist");
             }
@@ -109,7 +117,15 @@ namespace Archz.modules
 
         public void SetScanFrequency(object newScanFreq)
         {
-
+            int result;
+            if(int.TryParse(newScanFreq.ToString(), out result))
+            {
+                settings.ScanFrequencyInMin = result;
+            }
+            else
+            {
+                Logger.Log(LogStatus.ERROR, $"Value {newScanFreq.ToString()} is not a number");
+            }
         }
 
         #endregion
@@ -128,6 +144,7 @@ namespace Archz.modules
         }
         private void ScanFolders()
         {
+            core.Logger.Log(core.LogStatus.INFO, $"Start scanning folders");
             foreach (var path in settings.ObservedFolders)
             {
                 //Scan every file and classify
@@ -164,14 +181,26 @@ namespace Archz.modules
 
         private void MoveFileToTypedFolder(string pathToFile, string typedFolderPath)
         {
-            if(!Directory.Exists(typedFolderPath))
+            try
             {
-                Directory.CreateDirectory(typedFolderPath);
-            }
-            string destinationPath = $"{typedFolderPath}\\{Path.GetFileName(pathToFile)}";
-            File.Move(pathToFile, destinationPath);
+                if (!Directory.Exists(typedFolderPath))
+                {
+                    Directory.CreateDirectory(typedFolderPath);
+                }
+                string destinationPath = $"{typedFolderPath}\\{Path.GetFileName(pathToFile)}";
+                if (File.Exists(destinationPath))
+                {
+                    File.Delete(destinationPath);
+                }
+                File.Move(pathToFile, destinationPath);
 
-            core.Logger.Log(core.LogStatus.INFO, $"File {Path.GetFileName(pathToFile)} has been moved to {typedFolderPath}");
+                core.Logger.Log(core.LogStatus.INFO, $"File {Path.GetFileName(pathToFile)} has been moved to {typedFolderPath}");
+            }
+            catch(Exception e)
+            {
+                core.Logger.Log(core.LogStatus.ERROR, $"Something went wrong while moving file to typed folder. " +
+                    $"{Environment.NewLine}Details {e.Message}");
+            }
         }
 
         #endregion

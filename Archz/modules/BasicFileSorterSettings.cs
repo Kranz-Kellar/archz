@@ -16,7 +16,7 @@ namespace Archz.modules
 
         public int ScanFrequencyInMin { get; set; }
 
-        private int DefaultScanFrequencyInMin = 5;
+        private int DefaultScanFrequencyInMin = 1;
 
         public int GetScanFrequencyInMillisec()
         {

@@ -8,6 +8,7 @@ namespace Archz.core
     public class Archz
     {
         private List<IModule> modulesList;
+        private bool isRunning;
 
         public void Run()
         {
@@ -28,14 +29,18 @@ namespace Archz.core
 
         private void Start()
         {
+            isRunning = true;
             modulesList.ForEach(x => x.Start());
         }
 
         private void Update()
         {
-            lock (modulesList)
+            while (isRunning)
             {
-                modulesList.ForEach(x => x.Update());
+                lock (modulesList)
+                {
+                    modulesList.ForEach(x => x.Update());
+                }
             }
         }
 
